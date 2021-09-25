@@ -13,12 +13,13 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 
 from watchlist_app.models import WatchList, StreamPlatform, Review
 from watchlist_app.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
-from watchlist_app.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
+from watchlist_app.api.permissions import IsAdminOrReadOnly, ReviewUserOrReadOnly
 
 
 class StreamPlatformVS(viewsets.ModelViewSet):
     serializer_class = StreamPlatformSerializer
     queryset = StreamPlatform.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
     
 
 # class StreamPlatformVS(viewsets.ViewSet):
@@ -45,6 +46,7 @@ class StreamPlatformVS(viewsets.ModelViewSet):
 
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Review.objects.all()
@@ -117,6 +119,8 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class StreamPlatformAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request):
         platform = StreamPlatform.objects.all()
         serializer = StreamPlatformSerializer(platform, many=True)
@@ -131,6 +135,8 @@ class StreamPlatformAV(APIView):
             return Response(serializer.errors)
 
 class StreamPlatformDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request, pk):
         try:
             platform = StreamPlatform.objects.get(pk= pk)
@@ -156,6 +162,7 @@ class StreamPlatformDetailAV(APIView):
         return Response(status= status.HTTP_204_NO_CONTENT)
 
 class WatchListAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         movies = WatchList.objects.all()
@@ -171,6 +178,8 @@ class WatchListAV(APIView):
             return Response(serializer.errors)
 
 class WatchDetailAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    
     def get(self, request, pk):
         try:
             movie = WatchList.objects.get(pk= pk)
