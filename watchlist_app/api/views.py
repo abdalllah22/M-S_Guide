@@ -18,6 +18,7 @@ from watchlist_app.models import WatchList, StreamPlatform, Review
 from watchlist_app.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 from watchlist_app.api.permissions import IsAdminOrReadOnly, ReviewUserOrReadOnly
 from watchlist_app.api.throttling import ReviewCreateThrottle, ReviewListThrottle
+from watchlist_app.api.pagination import WatchListPagination, WatchListLOPagination, WatchListCPagination
 
 class StreamPlatformVS(viewsets.ModelViewSet):
     serializer_class = StreamPlatformSerializer
@@ -186,6 +187,11 @@ class WatchListGV(generics.ListAPIView):
     queryset = WatchList.objects.all()
     serializer_class = WatchListSerializer
     
+    # pagination_class = WatchListPagination
+    pagination_class = WatchListLOPagination
+    # pagination_class = WatchListCPagination     # return regrad to created filed
+
+
     # permission_classes = [IsAuthenticated,]
     
     # filter_backends = [filters.DjangoFilterBackend]
